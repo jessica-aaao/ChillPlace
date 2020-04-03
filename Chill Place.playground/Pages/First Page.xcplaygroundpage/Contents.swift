@@ -3,7 +3,7 @@
 import UIKit
 import PlaygroundSupport
 
-let backButton = UIButton()
+//let backButton = UIButton()
 let saveButton = UIButton()
 let discardButton = UIButton()
 
@@ -58,22 +58,18 @@ class MainViewController : UIViewController {
     }
     
     @IBAction func touchedSound(){
-        navigationController?.popViewController(animated: true)
         navigationController?.pushViewController(soundView, animated: true)
     }
     
     @IBAction func touchedTv(){
-        navigationController?.popViewController(animated: true)
         navigationController?.pushViewController(tvView, animated: true)
     }
     
     @IBAction func touchedDiary(){
-        navigationController?.popViewController(animated: true)
         navigationController?.pushViewController(diaryView, animated: true)
     }
     
     @IBAction func touchedIpad(){
-        navigationController?.popViewController(animated: true)
         navigationController?.pushViewController(ipadView, animated: true)
     }
 }
@@ -93,30 +89,21 @@ class SoundViewController : UIViewController {
         let image2 = UIImage(named: "Sound Phone")!
         let phone = UIImageView(image: image2)
         
-        //button
-        let image3 = UIImage(named: "Back Arrow")!
-        backButton.frame = CGRect(x: 16, y: 73, width: 206, height: 22)
-        backButton.setImage(image3, for: .normal)
-        backButton.setTitle("Voltar para a tela inicial", for: .normal)
-        backButton.setTitleColor(#colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1), for: .normal)
-        backButton.titleLabel?.textAlignment = .center
-        backButton.addTarget(nil, action: #selector(touchedBack), for: .touchUpInside)
-        
-        let image4 = UIImage(named: "Sound Back Bar")!
-        let backBar = UIImageView(image: image4)
-        backBar.frame = CGRect(x: 5, y: 53, width: 412, height: 66)
+        //putting the navigation bar on the phone
+        let phoneNavigationBar = NavigationBar(X: 16, Y: 73, Width: 206, Height: 22)
+        phoneNavigationBar.backButton.addTarget(nil, action: #selector(touchedBack), for: .touchUpInside)
         
         //Adding elements on subview
         soundPage.addSubview(soundCloser)
         soundPage.addSubview(phone)
-        soundPage.addSubview(backBar)
-        soundPage.addSubview(backButton)
+        soundPage.addSubview(phoneNavigationBar.backBar)
+        soundPage.addSubview(phoneNavigationBar.backButton)
+        
         self.view = soundPage
     }
     
     @IBAction func touchedBack(){
-        navigationController?.popViewController(animated: true)
-        navigationController?.pushViewController(mainView, animated: true)
+        navigationController?.popViewController(animated: true)?.addChild(tvView)
     }
 }
 
@@ -138,30 +125,25 @@ class TvViewController : UIViewController {
         let phone = UIImageView(image: image2)
         
         //buttons
-        let image3 = UIImage(named: "Back Arrow")!
-        backButton.frame = CGRect(x: 16, y: 73, width: 206, height: 22)
-        backButton.setImage(image3, for: .normal)
-        backButton.setTitle("Voltar para a tela inicial", for: .normal)
-        backButton.setTitleColor(#colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1), for: .normal)
-        backButton.titleLabel?.textAlignment = .center
-        
-        let image4 = UIImage(named: "Back Bar")!
-        let backBar = UIImageView(image: image4)
-        backBar.frame = CGRect(x: 5, y: 53, width: 412, height: 66)
-        
         let image5 = UIImage(named: "Full Screen")
         fullScreenButton.frame = CGRect(x: 1279, y: 612, width: 73, height: 61)
         fullScreenButton.setImage(image5, for: .normal)
         
+        //putting the navigation bar on the phone
+        let phoneNavigationBar = NavigationBar(X: 16, Y: 73, Width: 206, Height: 22)
+        phoneNavigationBar.backButton.addTarget(nil, action: #selector(touchedBack), for: .touchUpInside)
+        
         //Adding elements on subview
         tvPage.addSubview(tvCloser)
         tvPage.addSubview(phone)
-        tvPage.addSubview(backBar)
-        tvPage.addSubview(backButton)
+        tvPage.addSubview(phoneNavigationBar.backBar)
+        tvPage.addSubview(phoneNavigationBar.backButton)
         tvPage.addSubview(fullScreenButton)
         self.view = tvPage
-        
-        
+    }
+    
+    @IBAction func touchedBack(){
+        navigationController?.popViewController(animated: true)
     }
 }
 
@@ -180,39 +162,87 @@ class DiaryViewController : UIViewController {
         let image2 = UIImage(named: "Diary Page")!
         let page = UIImageView(image: image2)
         
+        //labels
+        let diaryFont = UIFont(name: "Bradley Hand", size: 28)
+        
+        let title = UILabel()
+        title.frame = CGRect(x: 36, y: 80, width: 341, height: 70)
+        title.lineBreakMode = .byWordWrapping
+        title.numberOfLines = 0
+        title.font = diaryFont
+        title.textColor = #colorLiteral(red: 0.05882352941, green: 0.1176470588, blue: 0.2117647059, alpha: 1)
+        title.text = "ESCREVE AQUI TUDO \n QUE TE AFLIGE!!!"
+        title.textAlignment = .center
+        
+        //text field
+        let writeHere = UITextField()
         let image7 = UIImage(named: "Write Here Background")!
-        let writeBackground = UIImageView(image: image7)
-        writeBackground.frame = CGRect(x: 40, y: 157, width: 351, height: 471)
+        writeHere.adjustsFontSizeToFitWidth = true
+        writeHere.frame = CGRect(x: 30, y: 207, width: 351, height: 471)
+        writeHere.background = image7
+        writeHere.placeholder = "Escreva aqui..."
+        writeHere.textAlignment = .justified
+        writeHere.insertText("gfowiehf;nwd \n kwqbiewbfpwiebv")
+        
+        
         
         //buttons
-        let image3 = UIImage(named: "Back Arrow")!
-        backButton.frame = CGRect(x: 16, y: 20, width: 206, height: 22)
-        backButton.setImage(image3, for: .normal)
-        backButton.setTitle("Voltar para a tela inicial", for: .normal)
-        backButton.setTitleColor(#colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1), for: .normal)
-        backButton.titleLabel?.textAlignment = .center
-        
-        let image4 = UIImage(named: "Diary Back Bar")!
-        let backBar = UIImageView(image: image4)
-        backBar.frame = CGRect(x: 0, y: 0, width: 420, height: 66)
-        
         let image5 = UIImage(named: "Salvar Button")!
-        saveButton.frame = CGRect(x: 40, y: 768, width: 355, height: 56)
+        saveButton.frame = CGRect(x: 30, y: 720, width: 355, height: 56)
         saveButton.setImage(image5, for: .normal)
+        saveButton.addTarget(nil, action: #selector(touchedSave), for: .touchUpInside)
         
         let image6 = UIImage(named: "Descartar Button")
-        discardButton.frame = CGRect(x: 40, y: 751, width: 355, height: 56)
+        discardButton.frame = CGRect(x: 30, y: 800, width: 355, height: 56)
         discardButton.setImage(image6, for: .normal)
+        discardButton.addTarget(nil, action: #selector(touchedDiscard), for: .touchUpInside)
+        
+        //putting the navigation bar on the phone
+        let phoneNavigationBar = NavigationBar(X: 16, Y: 23, Width: 206, Height: 22)
+        phoneNavigationBar.backBar.frame = CGRect(x: 0, y: 0, width: 420, height: 66)
+        phoneNavigationBar.backButton.addTarget(nil, action: #selector(touchedBack), for: .touchUpInside)
         
         //Adding elements on subview
         diaryPage.addSubview(diaryCloser)
         diaryPage.addSubview(page)
-        diaryPage.addSubview(backBar)
-        diaryPage.addSubview(backButton)
+        diaryPage.addSubview(phoneNavigationBar.backBar)
+        diaryPage.addSubview(phoneNavigationBar.backButton)
         diaryPage.addSubview(saveButton)
         diaryPage.addSubview(discardButton)
-        diaryPage.addSubview(writeBackground)
+        diaryPage.addSubview(writeHere)
+        diaryPage.addSubview(title)
         self.view = diaryPage
+    }
+    
+    @IBAction func touchedSave(){
+        do {
+            // get the documents folder url
+            if let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                // create the destination url for the text file to be saved
+                let fileURL = documentDirectory.appendingPathComponent("file.txt")
+                // define the string/text to be saved
+                let text = "Hello World !!!"
+                // writing to disk
+                // Note: if you set atomically to true it will overwrite the file if it exists without a warning
+                //try text.write(to: fileURL, atomically: false, encoding: .utf8)
+                print("saving was successful")
+                print(fileURL)
+                // any posterior code goes here
+                // reading from disk
+                let savedText = try String(contentsOf: fileURL)
+                print("savedText:", savedText)   // "Hello World !!!\n"
+            }
+        } catch {
+            print("error:", error)
+        }
+    }
+    
+    @IBAction func touchedDiscard(){
+        navigationController?.reloadInputViews()
+    }
+    
+    @IBAction func touchedBack(){
+        navigationController?.popViewController(animated: true)
     }
 }
 
@@ -234,17 +264,6 @@ class IpadViewController : UIViewController {
         let phone = UIImageView(image: image2)
         
         //buttons
-        let image3 = UIImage(named: "Back Arrow")!
-        backButton.frame = CGRect(x: 16, y: 73, width: 206, height: 22)
-        backButton.setImage(image3, for: .normal)
-        backButton.setTitle("Voltar para a tela inicial", for: .normal)
-        backButton.setTitleColor(#colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1), for: .normal)
-        backButton.titleLabel?.textAlignment = .center
-        
-        let image4 = UIImage(named: "Back Bar")!
-        let backBar = UIImageView(image: image4)
-        backBar.frame = CGRect(x: 5, y: 53, width: 412, height: 66)
-        
         let image5 = UIImage(named: "Gravar Button")
         recordButton.frame = CGRect(x: 100, y: 413, width: 215, height: 215)
         recordButton.setImage(image5, for: .normal)
@@ -254,19 +273,24 @@ class IpadViewController : UIViewController {
         stopButton.setImage(image6, for: .normal)
         stopButton.isHidden = true
         
+        //putting the navigation bar on the phone
+        let phoneNavigationBar = NavigationBar(X: 16, Y: 73, Width: 206, Height: 22)
+        phoneNavigationBar.backButton.addTarget(nil, action: #selector(touchedBack), for: .touchUpInside)
+        
         //Adding elements on subview
         ipadPage.addSubview(ipadCloser)
         ipadPage.addSubview(phone)
-        ipadPage.addSubview(backBar)
-        ipadPage.addSubview(backButton)
+        ipadPage.addSubview(phoneNavigationBar.backBar)
+        ipadPage.addSubview(phoneNavigationBar.backButton)
         ipadPage.addSubview(recordButton)
         ipadPage.addSubview(stopButton)
         self.view = ipadPage
     }
+    
+    @IBAction func touchedBack(){
+        navigationController?.popViewController(animated: true)
+    }
 }
-
-
-
 
 let mainView = MainViewController(screenType: .mac, isPortrait: true)
 let soundView = SoundViewController(screenType: .mac, isPortrait: true)
@@ -275,7 +299,7 @@ let diaryView = DiaryViewController(screenType: .mac, isPortrait: true)
 let ipadView = IpadViewController(screenType: .mac, isPortrait: true)
 
 let navigation = UINavigationController(screenType: .mac, isPortrait: true)
-navigation.navigationBar.isHidden = false
+navigation.navigationBar.isHidden = true
 navigation.pushViewController(mainView, animated: true)
 PlaygroundPage.current.liveView = navigation.scale(to: 0.4)
 
