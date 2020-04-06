@@ -126,7 +126,7 @@ class TvViewController : UIViewController {
         
         //buttons
         let image5 = UIImage(named: "Full Screen")
-        fullScreenButton.frame = CGRect(x: 1279, y: 612, width: 73, height: 61)
+        fullScreenButton.frame = CGRect(x: 1370, y: 612, width: 73, height: 61)
         fullScreenButton.setImage(image5, for: .normal)
         
         //putting the navigation bar on the phone
@@ -147,6 +147,7 @@ class TvViewController : UIViewController {
     }
 }
 
+let writeHere = UITextField()
 class DiaryViewController : UIViewController {
     override func loadView() {
         let diaryPage = UIView()
@@ -215,26 +216,44 @@ class DiaryViewController : UIViewController {
     }
     
     @IBAction func touchedSave(){
+        
+        let date = Date()
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: date)
+        let day = dateComponents.day!
+        let month = dateComponents.month!
+        let year = dateComponents.year!
+        let todayDate = "\(day)-\(month)-\(year)"
+        let fileUrl = playgroundSharedDataDirectory.appendingPathComponent("\(todayDate).txt")
+        let textToWrite = "\(writeHere)\n\n"
+        
         do {
-            // get the documents folder url
-            if let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-                // create the destination url for the text file to be saved
-                let fileURL = documentDirectory.appendingPathComponent("file.txt")
-                // define the string/text to be saved
-                let text = "Hello World !!!"
-                // writing to disk
-                // Note: if you set atomically to true it will overwrite the file if it exists without a warning
-                //try text.write(to: fileURL, atomically: false, encoding: .utf8)
-                print("saving was successful")
-                print(fileURL)
-                // any posterior code goes here
-                // reading from disk
-                let savedText = try String(contentsOf: fileURL)
-                print("savedText:", savedText)   // "Hello World !!!\n"
-            }
+            try textToWrite.write(to: fileUrl, atomically: true, encoding: .utf8)
         } catch {
-            print("error:", error)
+            print("Error saving file: \(error)")
         }
+        
+        let _ = try? String(contentsOf: fileUrl)
+        
+        /*do {
+         // get the documents folder url
+         if let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+         // create the destination url for the text file to be saved
+         let fileURL = documentDirectory.appendingPathComponent("file.txt")
+         // define the string/text to be saved
+         let text = "Hello World !!!"
+         // writing to disk
+         // Note: if you set atomically to true it will overwrite the file if it exists without a warning
+         //try text.write(to: fileURL, atomically: false, encoding: .utf8)
+         print("saving was successful")
+         print(fileURL)
+         // any posterior code goes here
+         // reading from disk
+         let savedText = try String(contentsOf: fileURL)
+         print("savedText:", savedText)   // "Hello World !!!\n"
+         }
+         } catch {
+         print("error:", error)
+         }*/
     }
     
     @IBAction func touchedDiscard(){
@@ -265,11 +284,11 @@ class IpadViewController : UIViewController {
         
         //buttons
         let image5 = UIImage(named: "Gravar Button")
-        recordButton.frame = CGRect(x: 100, y: 413, width: 215, height: 215)
+        recordButton.frame = CGRect(x: 105, y: 373, width: 215, height: 215)
         recordButton.setImage(image5, for: .normal)
         
         let image6 = UIImage(named: "Parar Button")
-        stopButton.frame = CGRect(x: 100, y: 413, width: 215, height: 215)
+        stopButton.frame = CGRect(x: 105, y: 373, width: 215, height: 215)
         stopButton.setImage(image6, for: .normal)
         stopButton.isHidden = true
         
