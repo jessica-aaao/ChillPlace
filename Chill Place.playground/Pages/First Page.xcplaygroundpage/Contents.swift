@@ -4,8 +4,6 @@ import UIKit
 import PlaygroundSupport
 
 //let backButton = UIButton()
-let saveButton = UIButton()
-let discardButton = UIButton()
 
 var buttonList: [UIButton] = []
 var feelingsSelected: [String] = []
@@ -80,7 +78,7 @@ class MainViewController : UIViewController {
         let textBox = UIImageView(image: image4)
         textBox.frame = CGRect(x: 16, y: 790, width: 400, height: 76)
         
-        scrollPhone.frame = CGRect(x: 16, y: 73, width: 400, height: 700)
+        scrollPhone.frame = CGRect(x: 16, y: 115, width: 400, height: 670)
         scrollPhone.contentSize = CGSize(width: 390, height: 865)
         scrollPhone.isScrollEnabled = true
         scrollPhone.backgroundColor = #colorLiteral(red: 0.9529411765, green: 0.9568627451, blue: 0.9725490196, alpha: 1)
@@ -195,7 +193,7 @@ class MainViewController : UIViewController {
         buttonsBackground.isHidden = true
         
         negativeThoughts.frame.size = CGSize(width: 120, height: 60)
-            
+        
         anxietyButton.isHidden = true
         fearButton.isHidden = true
         insomniaButton.isHidden = true
@@ -267,7 +265,7 @@ class MainViewController : UIViewController {
         
         self.view = firstPage
     }
-        
+    
     @IBAction func touchedSend(){
         
         if userTextField.text != ""{
@@ -394,6 +392,8 @@ class MainViewController : UIViewController {
 
 
 class SoundViewController : UIViewController {
+    let firstPlayButton = UIButton()
+    
     override func loadView() {
         let soundPage = UIView()
         soundPage.frame = CGRect(x: 0, y: 0, width: 1440, height: 900)
@@ -408,17 +408,70 @@ class SoundViewController : UIViewController {
         let image2 = UIImage(named: "Sound Phone")!
         let phone = UIImageView(image: image2)
         
+        let playImage = UIImage(named: "Play Button")
+        let playAllImage = UIImage(named: "Play All Button")
+        let musicMarker = UIImage(named: "Sound Marker")
+        
+        let firstSoundMarker = UIImageView(image: musicMarker)
+        firstSoundMarker.frame = CGRect(x: 29, y: 236, width: 50, height: 50)
+        
         //putting the navigation bar on the phone
         let phoneNavigationBar = NavigationBar(X: 16, Y: 73, Width: 206, Height: 22)
         phoneNavigationBar.backButton.addTarget(nil, action: #selector(touchedBack), for: .touchUpInside)
+        
+        //Labels
+        let titleFont = UIFont(name: "Courier", size: 28)
+        let title = UILabel()
+        title.font = titleFont
+        title.text = "Essa é sua Playlist!"
+        title.textColor = .white
+        title.textAlignment = .left
+        title.frame = CGRect(x: 29, y: 119, width: 380, height: 35)
+        title.lineBreakMode = .byWordWrapping
+        title.numberOfLines = 0
+        
+        
+        let subtitleFont = UIFont(name: "Courier", size: 18)
+        let subtitle = UILabel()
+        subtitle.font = subtitleFont
+        subtitle.text = "Essas músicas irão te ajudar a se sentir melhor!"
+        subtitle.textColor = .white
+        subtitle.textAlignment = .left
+        subtitle.frame = CGRect(x: 29, y: 140, width: 326, height: 70)
+        subtitle.lineBreakMode = .byWordWrapping
+        subtitle.numberOfLines = 0
+        
+        //Buttons
+        firstPlayButton.setImage(playImage, for: .normal)
+        firstPlayButton.frame = CGRect(x: 283, y: 246, width: 77, height: 37)
+        firstPlayButton.addTarget(nil, action: #selector(touchedPlaySong), for: .touchUpInside)
+        
+        let playAllButton = UIButton()
+        playAllButton.setImage(playAllImage, for: .normal)
+        playAllButton.frame = CGRect(x: 152, y: 584, width: 119, height: 38)
+        playAllButton.addTarget(nil, action: #selector(touchedPlayAll), for: .touchUpInside)
+        
         
         //Adding elements on subview
         soundPage.addSubview(soundCloser)
         soundPage.addSubview(phone)
         soundPage.addSubview(phoneNavigationBar.backBar)
         soundPage.addSubview(phoneNavigationBar.backButton)
+        soundPage.addSubview(title)
+        soundPage.addSubview(subtitle)
+        soundPage.addSubview(firstPlayButton)
+        soundPage.addSubview(playAllButton)
+        soundPage.addSubview(firstSoundMarker)
         
         self.view = soundPage
+    }
+    
+    @IBAction func touchedPlaySong(){
+        print("tocar uma música")
+    }
+        
+    @IBAction func touchedPlayAll(){
+        print("tocar todas as músicas")
     }
     
     @IBAction func touchedBack(){
@@ -450,6 +503,19 @@ class TvViewController : UIViewController {
         let image5 = UIImage(named: "Full Screen")
         fullScreenButton.frame = CGRect(x: 1370, y: 612, width: 73, height: 61)
         fullScreenButton.setImage(image5, for: .normal)
+        fullScreenButton.addTarget(nil, action: #selector(touchedfullScreen), for: .touchUpInside)
+        
+        //labels
+        let title = UILabel()
+        let titleFont = UIFont(name: "Courier", size: 30)!
+        title.frame = CGRect (x: 21, y: 119, width: 400, height: 70)
+        title.text = "Escolha um dos Vídeos Abaixo!"
+        title.lineBreakMode = .byWordWrapping
+        title.numberOfLines = 0
+        title.textColor = .black
+        title.textAlignment = .center
+        title.font = titleFont
+        
         
         //putting the navigation bar on the phone
         let phoneNavigationBar = NavigationBar(X: 16, Y: 73, Width: 206, Height: 22)
@@ -460,8 +526,14 @@ class TvViewController : UIViewController {
         tvPage.addSubview(phone)
         tvPage.addSubview(phoneNavigationBar.backBar)
         tvPage.addSubview(phoneNavigationBar.backButton)
+        tvPage.addSubview(title)
         tvPage.addSubview(fullScreenButton)
         self.view = tvPage
+    }
+    
+    @IBAction func touchedfullScreen(){
+        //aumentar o tamanho do vídeo para cobrir a tela toda
+        print("full screen")
     }
     
     @IBAction func touchedBack(){
@@ -473,6 +545,8 @@ class TvViewController : UIViewController {
 
 
 class DiaryViewController : UIViewController {
+    let saveButton = UIButton()
+    let discardButton = UIButton()
     let writeHere = UITextView()
     override func loadView() {
         let diaryPage = UIView()
@@ -551,22 +625,15 @@ class DiaryViewController : UIViewController {
         let month = dateComponents.month!
         let year = dateComponents.year!
         let todayDate = "\(day)-\(month)-\(year)"
-        /*let fileUrl = playgroundSharedDataDirectory.appendingPathComponent("\(todayDate).txt")
-         let textToWrite = "\(writeHere)\n\n"
-         
-         do {
-         try textToWrite.write(to: fileUrl, atomically: true, encoding: .utf8)
-         } catch {
-         print("Error saving file: \(error)")
-         }
-         
-         let _ = try? String(contentsOf: fileUrl)*/
         
         if let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            
             let fileUrl = documentDirectory.appendingPathComponent("\(todayDate).txt")
+            
             let textToWrite = String(writeHere.text!) + "\n\n"
             
             if FileManager.default.fileExists(atPath: fileUrl.path) {
+                
                 if let fileHandle = try? FileHandle(forWritingTo: fileUrl) {
                     fileHandle.seekToEndOfFile()
                     fileHandle.write(textToWrite.data(using: .utf8)!)
@@ -581,7 +648,6 @@ class DiaryViewController : UIViewController {
                 } catch {
                     print("Error writing file: \(error)")
                 }
-                print(fileUrl)
             }
         }
     }
@@ -601,6 +667,12 @@ class DiaryViewController : UIViewController {
 class IpadViewController : UIViewController {
     let recordButton = UIButton()
     let stopButton = UIButton()
+    let ipadButtonSubtitle = UILabel()
+    let ipadButtonSubtitle2 = UILabel()
+    let ipadTitle2 = UILabel()
+    let saveButton = UIButton()
+    let discardButton = UIButton()
+    
     override func loadView() {
         let ipadPage = UIView()
         ipadPage.frame = CGRect(x: 0, y: 0, width: 1440, height: 900)
@@ -610,33 +682,156 @@ class IpadViewController : UIViewController {
         //backgrounds
         let image1 = UIImage(named: "Ipad")!
         let ipadCloser = UIImageView(image: image1)
-        ipadCloser.frame = CGRect(x: 419, y: 0, width: 1050, height: 900)
+        ipadCloser.frame = CGRect(x: 419, y: 0, width: 1050, height: 930)
         
         let image2 = UIImage(named: "Chat Phone")!
         let phone = UIImageView(image: image2)
         
         //buttons
         let image5 = UIImage(named: "Gravar Button")
-        recordButton.frame = CGRect(x: 105, y: 373, width: 215, height: 215)
+        recordButton.frame = CGRect(x: 100, y: 373, width: 215, height: 215)
         recordButton.setImage(image5, for: .normal)
+        recordButton.addTarget(nil, action: #selector(touchedRecord), for: .touchUpInside)
         
         let image6 = UIImage(named: "Parar Button")
-        stopButton.frame = CGRect(x: 105, y: 373, width: 215, height: 215)
+        stopButton.frame = CGRect(x: 100, y: 373, width: 215, height: 215)
         stopButton.setImage(image6, for: .normal)
         stopButton.isHidden = true
+        stopButton.addTarget(nil, action: #selector(touchedStop), for: .touchUpInside)
+        
+        let image7 = UIImage(named: "Salvar Button")!
+        saveButton.frame = CGRect(x: 30, y: 720, width: 355, height: 56)
+        saveButton.setImage(image7, for: .normal)
+        saveButton.addTarget(nil, action: #selector(touchedSave), for: .touchUpInside)
+        saveButton.isHidden = true
+        
+        
+        let image8 = UIImage(named: "Descartar Button")
+        discardButton.frame = CGRect(x: 30, y: 800, width: 355, height: 56)
+        discardButton.setImage(image8, for: .normal)
+        discardButton.addTarget(nil, action: #selector(touchedDiscard), for: .touchUpInside)
+        discardButton.isHidden = true
         
         //putting the navigation bar on the phone
         let phoneNavigationBar = NavigationBar(X: 16, Y: 73, Width: 206, Height: 22)
         phoneNavigationBar.backButton.addTarget(nil, action: #selector(touchedBack), for: .touchUpInside)
+        
+        //Labels
+        let ipadFont = UIFont(name: "Bradley Hand", size: 28)
+        let ipadTitle = UILabel()
+        ipadTitle.lineBreakMode = .byWordWrapping
+        ipadTitle.numberOfLines = 0
+        ipadTitle.font = ipadFont
+        ipadTitle.text = "FALA AQUI TUDO QUE TE AFLIGE!!!!"
+        ipadTitle.textAlignment = .center
+        ipadTitle.frame = CGRect(x: 16, y: 83, width: 400, height: 150)
+        ipadTitle.textColor = .black
+        
+        let subtitleFont = UIFont(name: "Bradley Hand", size: 22)
+        
+        ipadButtonSubtitle.lineBreakMode = .byWordWrapping
+        ipadButtonSubtitle.numberOfLines = 0
+        ipadButtonSubtitle.font = subtitleFont
+        ipadButtonSubtitle.text = "Clique no botão vermelho para começar a gravar!"
+        ipadButtonSubtitle.textAlignment = .center
+        ipadButtonSubtitle.frame = CGRect(x: 16, y: 598, width: 400, height: 64)
+        ipadButtonSubtitle.textColor = .black
+        
+        ipadButtonSubtitle2.lineBreakMode = .byWordWrapping
+        ipadButtonSubtitle2.numberOfLines = 0
+        ipadButtonSubtitle2.font = subtitleFont
+        ipadButtonSubtitle2.text = "Clique no botão vermelho para parar de gravar!"
+        ipadButtonSubtitle2.textAlignment = .center
+        ipadButtonSubtitle2.frame = CGRect(x: 16, y: 598, width: 400, height: 64)
+        ipadButtonSubtitle2.textColor = .black
+        ipadButtonSubtitle2.isHidden = true
+        
+        let ipadFont2 = UIFont(name: "Bradley Hand", size: 24)
+        ipadTitle2.lineBreakMode = .byWordWrapping
+        ipadTitle2.numberOfLines = 0
+        ipadTitle2.font = ipadFont2
+        //ipadTitle2.font.withSize(24)
+        ipadTitle2.text = "NÃO SE PREOCUPE, ESTAMOS EM UM LUGAR SEGURO E O QUE FOR DITO AQUI, SÓ VOCÊ TEM ACESSO!!!!"
+        ipadTitle2.textAlignment = .center
+        ipadTitle2.frame = CGRect(x: 16, y: 682, width: 395, height: 180)
+        ipadTitle2.textColor = .black
         
         //Adding elements on subview
         ipadPage.addSubview(ipadCloser)
         ipadPage.addSubview(phone)
         ipadPage.addSubview(phoneNavigationBar.backBar)
         ipadPage.addSubview(phoneNavigationBar.backButton)
+        ipadPage.addSubview(ipadTitle)
+        ipadPage.addSubview(ipadTitle2)
+        ipadPage.addSubview(ipadButtonSubtitle)
+        ipadPage.addSubview(ipadButtonSubtitle2)
         ipadPage.addSubview(recordButton)
         ipadPage.addSubview(stopButton)
+        ipadPage.addSubview(saveButton)
+        ipadPage.addSubview(discardButton)
         self.view = ipadPage
+    }
+    
+    @IBAction func touchedRecord(){
+        recordButton.isHidden = true
+        ipadButtonSubtitle.isHidden = true
+        ipadTitle2.isHidden = true
+        
+        stopButton.isHidden = false
+        ipadButtonSubtitle2.isHidden = false
+        saveButton.isHidden = true
+        discardButton.isHidden = true
+    }
+    
+    @IBAction func touchedStop(){
+        stopButton.isHidden = true
+        ipadButtonSubtitle2.isHidden = true
+        
+        recordButton.isHidden = false
+        saveButton.isHidden = false
+        discardButton.isHidden = false
+        ipadButtonSubtitle.isHidden = false
+    }
+    
+    
+    @IBAction func touchedSave(){
+        
+        let date = Date()
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: date)
+        let day = dateComponents.day!
+        let month = dateComponents.month!
+        let year = dateComponents.year!
+        let todayDate = "\(day)-\(month)-\(year)"
+        
+        if let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            
+            let fileUrl = documentDirectory.appendingPathComponent("\(todayDate).txt")
+            
+            let textToWrite = "áudio"
+            
+            if FileManager.default.fileExists(atPath: fileUrl.path) {
+                
+                if let fileHandle = try? FileHandle(forWritingTo: fileUrl) {
+                    fileHandle.seekToEndOfFile()
+                    fileHandle.write(textToWrite.data(using: .utf8)!)
+                    fileHandle.closeFile()
+                    print("writing was successful")
+                }
+            }
+            else {
+                do {
+                    try textToWrite.write(to: fileUrl, atomically: true, encoding: .utf8)
+                    print("writing was successful")
+                    
+                } catch {
+                    print("Error writing file: \(error)")
+                }
+            }
+        }
+    }
+    
+    @IBAction func touchedDiscard(){
+        print("descartado")
     }
     
     @IBAction func touchedBack(){
