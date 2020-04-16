@@ -1,11 +1,17 @@
 import Foundation
 import PlaygroundSupport
 import WebKit
+import AVKit
+import AVFoundation
 
 public class DiaryViewController : UIViewController {
     let saveButton = UIButton()
     let discardButton = UIButton()
     let writeHere = UITextView()
+    
+    var player: AVPlayer!
+    var playerLayer: AVPlayerLayer!
+    
     public override func loadView() {
         let diaryPage = UIView()
         diaryPage.frame = CGRect(x: 0, y: 0, width: 1440, height: 900)
@@ -13,9 +19,15 @@ public class DiaryViewController : UIViewController {
         
         //images
         //backgrounds
-        let image1 = UIImage(named: "Diary")!
-        let diaryCloser = UIImageView(image: image1)
-        diaryCloser.frame = CGRect(x: 419, y: 0, width: 1050, height: 900)
+        let filePath = Bundle.main.path(forResource: "DiaryAnimation", ofType: "mov")
+        let videoURL = URL.init(fileURLWithPath: filePath!)
+        player = AVPlayer(url: videoURL as URL)
+            
+        playerLayer = AVPlayerLayer(player: player)
+        playerLayer.frame = CGRect(x: 419, y: 0, width: 1050, height: 900)
+        playerLayer.videoGravity = .resize
+        player.actionAtItemEnd = .pause
+        player.play()
         
         let image2 = UIImage(named: "Diary Page")!
         let page = UIImageView(image: image2)
@@ -34,10 +46,7 @@ public class DiaryViewController : UIViewController {
         title.textAlignment = .center
         
         //text field
-        //let writeHere = UITextField()
-        let image7 = UIImage(named: "Write Here Background")!
         writeHere.frame = CGRect(x: 30, y: 207, width: 351, height: 471)
-        writeHere.largeContentImage = image7
         writeHere.textAlignment = .justified
         writeHere.font = writingFont
         writeHere.showsVerticalScrollIndicator = true
@@ -45,7 +54,6 @@ public class DiaryViewController : UIViewController {
         writeHere.backgroundColor = #colorLiteral(red: 0.8901960784, green: 0.8549019608, blue: 0.8039215686, alpha: 1)
         writeHere.layer.cornerRadius = 10
         writeHere.isEditable = true
-        writeHere.endFloatingCursor()
         
         //buttons
         let image5 = UIImage(named: "Salvar Button")!
@@ -64,7 +72,7 @@ public class DiaryViewController : UIViewController {
         phoneNavigationBar.backButton.addTarget(nil, action: #selector(touchedBack), for: .touchUpInside)
         
         //Adding elements on subview
-        diaryPage.addSubview(diaryCloser)
+        diaryPage.layer.addSublayer(playerLayer)
         diaryPage.addSubview(page)
         diaryPage.addSubview(phoneNavigationBar.backBar)
         diaryPage.addSubview(phoneNavigationBar.backButton)
@@ -72,7 +80,14 @@ public class DiaryViewController : UIViewController {
         diaryPage.addSubview(discardButton)
         diaryPage.addSubview(writeHere)
         diaryPage.addSubview(title)
+        
         self.view = diaryPage
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        if player != nil {
+            player.play()
+        }
     }
     
     @IBAction func touchedSave(){
@@ -115,6 +130,8 @@ public class DiaryViewController : UIViewController {
     }
     
     @IBAction func touchedBack(){
+        player.currentItem?.seek(to: CMTime.zero, completionHandler: nil)
+        player.pause()
         navigationController?.popViewController(animated: true)
     }
 }

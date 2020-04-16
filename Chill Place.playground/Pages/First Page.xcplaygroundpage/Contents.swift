@@ -5,14 +5,14 @@ import PlaygroundSupport
 import WebKit
 
 
-class MainViewController : UIViewController {
+class MainViewController : UIViewController, UINavigationControllerDelegate {
     var feelingsSelected: [String] = []
     
     //botões do cenário
     let tvButton = UIButton()
     let soundButton = UIButton()
     let diaryButton = UIButton()
-    let ipadButton = UIButton()
+    //let ipadButton = UIButton()
     
     //ELEMENTOS DO CHAT
     let scrollPhone = UIScrollView()
@@ -56,7 +56,7 @@ class MainViewController : UIViewController {
     let infoThree = chatBalloon(text: "1 - Som : escute sons escolhidos especialmente para você!").label
     let infoFour = chatBalloon(text: "2 - TV : veja vídeos com imagens maravilhosas!!!").label
     let infoFive = chatBalloon(text: "3 - Diário: escreva o teu desabafo!!").label
-    let infoSix = chatBalloon(text: "4 - Tablet/Ipad : grava o teu desabafo!!").label
+    //let infoSix = chatBalloon(text: "4 - Tablet/Ipad : grava o teu desabafo!!").label
     
     override func loadView() {
         let firstPage = UIView()
@@ -108,10 +108,10 @@ class MainViewController : UIViewController {
         diaryButton.addTarget(nil, action: #selector(touchedDiary), for: .touchUpInside)
         diaryButton.isEnabled = false
         
-        ipadButton.frame = CGRect(x: 990, y: 592, width: 30, height: 30)
+        /*ipadButton.frame = CGRect(x: 990, y: 592, width: 30, height: 30)
         ipadButton.setImage(image3, for: .normal)
         ipadButton.addTarget(nil, action: #selector(touchedIpad), for: .touchUpInside)
-        ipadButton.isEnabled = false
+        ipadButton.isEnabled = false*/
         
         
         //CHAT
@@ -164,8 +164,8 @@ class MainViewController : UIViewController {
         infoFive.frame = CGRect(x: 19, y: 684, width: 170, height: 84)
         infoFive.isHidden = true
         
-        infoSix.frame = CGRect(x: 19, y: 778, width: 170, height: 84)
-        infoSix.isHidden = true
+        /*infoSix.frame = CGRect(x: 19, y: 778, width: 170, height: 84)
+        infoSix.isHidden = true*/
         
         gotItButton.addTarget(nil, action: #selector(touchedGotIt), for: .touchUpInside)
         gotItButton.isHidden = true
@@ -220,7 +220,7 @@ class MainViewController : UIViewController {
         firstPage.addSubview(tvButton)
         firstPage.addSubview(soundButton)
         firstPage.addSubview(diaryButton)
-        firstPage.addSubview(ipadButton)
+        //firstPage.addSubview(ipadButton)
         firstPage.addSubview(scrollPhone)
         firstPage.addSubview(bar)
         firstPage.addSubview(title)
@@ -232,7 +232,7 @@ class MainViewController : UIViewController {
         scrollPhone.addSubview(infoThree)
         scrollPhone.addSubview(infoFour)
         scrollPhone.addSubview(infoFive)
-        scrollPhone.addSubview(infoSix)
+        //scrollPhone.addSubview(infoSix)
         scrollPhone.addSubview(secondUserMessage)
         scrollPhone.addSubview(secondSystemMessage)
         scrollPhone.addSubview(thirdSystemMessage)
@@ -281,7 +281,7 @@ class MainViewController : UIViewController {
         infoThree.isHidden = false
         infoFour.isHidden = false
         infoFive.isHidden = false
-        infoSix.isHidden = false
+        //infoSix.isHidden = false
         gotItButton.isHidden = false
         
         userTextField.isHidden = true
@@ -316,7 +316,7 @@ class MainViewController : UIViewController {
         infoThree.isHidden = true
         infoFour.isHidden = true
         infoFive.isHidden = true
-        infoSix.isHidden = true
+        //infoSix.isHidden = true
         scrollPhone.contentSize = CGSize(width: 390, height: 700)
         scrollPhone.isScrollEnabled = false
     }
@@ -340,7 +340,7 @@ class MainViewController : UIViewController {
         
         tvButton.isEnabled = true
         soundButton.isEnabled = true
-        ipadButton.isEnabled = true
+        //ipadButton.isEnabled = true
         diaryButton.isEnabled = true
         
         secondUserMessage.isHidden = true
@@ -378,9 +378,9 @@ class MainViewController : UIViewController {
         navigationController?.pushViewController(diaryView, animated: true)
     }
     
-    @IBAction func touchedIpad(){
+    /*@IBAction func touchedIpad(){
         navigationController?.pushViewController(ipadView, animated: true)
-    }
+    }*/
 
 }
 
@@ -388,7 +388,7 @@ let mainView = MainViewController()
 let soundView = SoundViewController()
 let tvView = TvViewController()
 let diaryView = DiaryViewController()
-let ipadView = IpadViewController()
+//let ipadView = IpadViewController()
 let exitView = ExitViewController()
 
 let navigation = UINavigationController(screenType: .mac, isPortrait: true)

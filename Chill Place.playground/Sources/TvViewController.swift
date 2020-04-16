@@ -1,6 +1,8 @@
 import Foundation
 import PlaygroundSupport
 import WebKit
+import AVKit
+import AVFoundation
 
 public class TvViewController : UIViewController, WKUIDelegate {
     public var feelingsSelected:[String] = []
@@ -27,6 +29,9 @@ public class TvViewController : UIViewController, WKUIDelegate {
     
     var fullScreen = false
     
+    var player: AVPlayer!
+    var playerLayer: AVPlayerLayer!
+    
     public override func loadView() {
         let tvPage = UIView()
         tvPage.frame = CGRect(x: 0, y: 0, width: 1440, height: 900)
@@ -34,22 +39,28 @@ public class TvViewController : UIViewController, WKUIDelegate {
         
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.ignoresViewportScaleLimits = true
-        webView = WKWebView(frame: CGRect(x: 440, y: 140, width: 990, height: 540), configuration: webConfiguration)
+        webView = WKWebView(frame: CGRect(x: 419, y: 40, width: 1025, height: 850), configuration: webConfiguration)
         webView.uiDelegate = self
         webView.isHidden = true
         
         //images
         //backgrounds
-        let image1 = UIImage(named: "TV")!
-        let tvCloser = UIImageView(image: image1)
-        tvCloser.frame = CGRect(x: 419, y: 0, width: 1050, height: 900)
+        let filePath = Bundle.main.path(forResource: "TVAnimation", ofType: "mov")
+        let videoURL = URL.init(fileURLWithPath: filePath!)
+        player = AVPlayer(url: videoURL as URL)
+            
+        playerLayer = AVPlayerLayer(player: player)
+        playerLayer.frame = CGRect(x: 419, y: 0, width: 1050, height: 900)
+        playerLayer.videoGravity = .resizeAspectFill
+        player.actionAtItemEnd = .pause
+        player.play()
         
         let image2 = UIImage(named: "Chat Phone")!
         let phone = UIImageView(image: image2)
         
         //buttons
         let image5 = UIImage(named: "Full Screen")
-        fullScreenButton.frame = CGRect(x: 1370, y: 612, width: 73, height: 61)
+        fullScreenButton.frame = CGRect(x: 1350, y: 830, width: 73, height: 61)
         fullScreenButton.setImage(image5, for: .normal)
         fullScreenButton.addTarget(nil, action: #selector(touchedfullScreen), for: .touchUpInside)
         fullScreenButton.backgroundColor = .black
@@ -69,9 +80,9 @@ public class TvViewController : UIViewController, WKUIDelegate {
         let subtitle = UILabel()
         subtitle.font = subtitleFont
         subtitle.text = "Recomendamos colocar fones de ouvido!!"
-        subtitle.textColor = .white
+        subtitle.textColor = .black
         subtitle.textAlignment = .left
-        subtitle.frame = CGRect(x: 21, y: 200, width: 326, height: 70)
+        subtitle.frame = CGRect(x: 21, y: 179, width: 326, height: 70)
         subtitle.lineBreakMode = .byWordWrapping
         subtitle.numberOfLines = 0
         
@@ -209,7 +220,7 @@ public class TvViewController : UIViewController, WKUIDelegate {
         }
         
         //Adding elements on subview
-        tvPage.addSubview(tvCloser)
+        tvPage.layer.addSublayer(playerLayer)
         tvPage.addSubview(phone)
         tvPage.addSubview(phoneNavigationBar.backBar)
         tvPage.addSubview(phoneNavigationBar.backButton)
@@ -226,7 +237,11 @@ public class TvViewController : UIViewController, WKUIDelegate {
         self.view = tvPage
     }
     
-    
+    public override func viewDidAppear(_ animated: Bool) {
+        if player != nil {
+            player.play()
+        }
+    }
     
     var lastSender = UIButton()
     
@@ -234,36 +249,40 @@ public class TvViewController : UIViewController, WKUIDelegate {
         sender.isSelected = !sender.isSelected
         var videoURL: URL
         
-        if lastSender.isSelected == true {
+        if lastSender.isSelected == true && lastSender != sender {
             lastSender.isSelected = false
         }
         
         lastSender = sender
-        
-        if sender.currentTitle! == "Vídeo 1" {
-            videoURL = URL(string: video1)!
-        } else if sender.currentTitle! == "Vídeo 2" {
-            videoURL = URL(string: video2)!
-        } else if sender.currentTitle! == "Vídeo 3" {
-            videoURL = URL(string: video3)!
-        } else {
-            videoURL = URL(string: video4)!
+        if sender.isSelected{
+            if sender.currentTitle! == "Vídeo 1" {
+                videoURL = URL(string: video1)!
+            } else if sender.currentTitle! == "Vídeo 2" {
+                videoURL = URL(string: video2)!
+            } else if sender.currentTitle! == "Vídeo 3" {
+                videoURL = URL(string: video3)!
+            } else {
+                videoURL = URL(string: video4)!
+            }
+            
+            let videoRequest = URLRequest(url: videoURL)
+            webView.load(videoRequest)
+            webView.uiDelegate = self
+            webView.isHidden = false
+        } else{
+            webView.isHidden = true
         }
         
-        let videoRequest = URLRequest(url: videoURL)
-        webView.load(videoRequest)
-        webView.uiDelegate = self
-        webView.isHidden = false
+        
+        
     }
     
     @IBAction func touchedfullScreen(){
         if fullScreen {
-            webView.frame = CGRect(x: 440, y: 140, width: 990, height: 540)
-            fullScreenButton.frame = CGRect(x: 1370, y: 612, width: 73, height: 61)
+            webView.frame = CGRect(x: 419, y: 40, width: 1025, height: 850)
             fullScreen = false
         } else{
             webView.frame = self.view.frame
-            fullScreenButton.frame = CGRect(x: 1350, y: 830, width: 73, height: 61)
             fullScreen = true
         }
         
@@ -271,6 +290,8 @@ public class TvViewController : UIViewController, WKUIDelegate {
     }
     
     @IBAction func touchedBack(){
+        player.currentItem?.seek(to: CMTime.zero, completionHandler: nil)
+        player.pause()
         navigationController?.popViewController(animated: true)
     }
 }

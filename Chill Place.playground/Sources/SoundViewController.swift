@@ -1,6 +1,9 @@
 import Foundation
 import PlaygroundSupport
 import WebKit
+import AVKit
+import AVFoundation
+
 
 public class SoundViewController : UIViewController, WKUIDelegate {
     public var feelingsSelected:[String] = []
@@ -22,6 +25,9 @@ public class SoundViewController : UIViewController, WKUIDelegate {
     var delta = 0
     var theta = 0
     
+    public var player: AVPlayer!
+    var playerLayer: AVPlayerLayer!
+    
     public override func loadView() {
         let soundPage = UIView()
         soundPage.frame = CGRect(x: 0, y: 0, width: 1440, height: 900)
@@ -34,9 +40,20 @@ public class SoundViewController : UIViewController, WKUIDelegate {
         
         //images
         //backgrounds
-        let image1 = UIImage(named: "Sound")!
-        let soundCloser = UIImageView(image: image1)
-        soundCloser.frame = CGRect(x: 419, y: 0, width: 1050, height: 900)
+        
+        let filePath = Bundle.main.path(forResource: "SoundAnimation", ofType: "mov")
+        let videoURL = URL.init(fileURLWithPath: filePath!)
+        player = AVPlayer(url: videoURL as URL)
+        
+        playerLayer = AVPlayerLayer(player: player)
+        playerLayer.frame = CGRect(x: 419, y: 0, width: 1050, height: 900)
+        playerLayer.videoGravity = .resize
+        player.actionAtItemEnd = .none
+        player.play()
+        
+        //NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+        
+        
         
         let image2 = UIImage(named: "Sound Phone")!
         let phone = UIImageView(image: image2)
@@ -195,7 +212,7 @@ public class SoundViewController : UIViewController, WKUIDelegate {
         }
         
         //Adding elements on subview
-        soundPage.addSubview(soundCloser)
+        //soundPage.addSubview(soundCloser)
         soundPage.addSubview(phone)
         soundPage.addSubview(phoneNavigationBar.backBar)
         soundPage.addSubview(phoneNavigationBar.backButton)
@@ -207,8 +224,21 @@ public class SoundViewController : UIViewController, WKUIDelegate {
         soundPage.addSubview(thirdPlayButton)
         soundPage.addSubview(fourthPlayButton)
         soundPage.addSubview(webView)
+        soundPage.layer.addSublayer(playerLayer)
         
         self.view = soundPage
+    }
+    
+    /*@objc func playerItemDidReachEnd(notification: Notification) {
+     if let playerItem = notification.object as? AVPlayerItem {
+     playerItem.seek(to: CMTime.zero, completionHandler: nil)
+     }
+     }*/
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        if player != nil {
+            player.play()
+        }
     }
     
     var lastSender = UIButton()
@@ -217,28 +247,36 @@ public class SoundViewController : UIViewController, WKUIDelegate {
         sender.isSelected = !sender.isSelected
         var soundURL: URL
         
-        if lastSender.isSelected == true {
+        if lastSender.isSelected == true && lastSender != sender {
             lastSender.isSelected = false
         }
         
         lastSender = sender
         
-        if sender.currentTitle! == "Música 1" {
-            soundURL = URL(string: sound1)!
-        } else if sender.currentTitle! == "Música 2" {
-            soundURL = URL(string: sound2)!
-        } else if sender.currentTitle! == "Música 3" {
-            soundURL = URL(string: sound3)!
-        } else {
-            soundURL = URL(string: sound4)!
+        if sender.isSelected{
+            if sender.currentTitle! == "Música 1" {
+                soundURL = URL(string: sound1)!
+            } else if sender.currentTitle! == "Música 2" {
+                soundURL = URL(string: sound2)!
+            } else if sender.currentTitle! == "Música 3" {
+                soundURL = URL(string: sound3)!
+            } else {
+                soundURL = URL(string: sound4)!
+            }
+            
+            let soundRequest = URLRequest(url: soundURL)
+            webView.load(soundRequest)
+            webView.isHidden = false
+        } else{
+            webView.reload()
+            webView.isHidden = true
         }
         
-        let soundRequest = URLRequest(url: soundURL)
-        webView.load(soundRequest)
-        webView.isHidden = false
     }
     
     @IBAction func touchedBack(){
+        player.currentItem?.seek(to: CMTime.zero, completionHandler: nil)
+        player.pause()
         navigationController?.popViewController(animated: true)
     }
 }
