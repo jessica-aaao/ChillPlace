@@ -7,7 +7,7 @@ import WebKit
 
 class MainViewController : UIViewController, UINavigationControllerDelegate {
     var feelingsSelected: [String] = []
-    
+
     //botões do cenário
     let tvButton = UIButton()
     let soundButton = UIButton()
@@ -90,7 +90,6 @@ class MainViewController : UIViewController, UINavigationControllerDelegate {
         sendButton.setImage(image5, for: .normal)
         sendButton.addTarget(nil, action: #selector(touchedSend), for: .touchUpInside)
         
-        
         //BUTTONS
         let image3 = UIImage(named: "Button")!
         tvButton.frame = CGRect(x: 965, y: 344, width: 50, height: 50)
@@ -133,7 +132,8 @@ class MainViewController : UIViewController, UINavigationControllerDelegate {
         userTextField.backgroundColor = .white
         userTextField.textAlignment = .center
         userTextField.enablesReturnKeyAutomatically = true
-        
+        userTextField.autocorrectionType = .no
+                
         userNameMessage.font = chatFont
         userNameMessage.text = "Olá, eu sou: "
         userNameMessage.frame = CGRect(x: 10, y: 817, width: 147, height: 22)
@@ -148,6 +148,7 @@ class MainViewController : UIViewController, UINavigationControllerDelegate {
         firstUserMessage.lineBreakMode = .byWordWrapping
         firstUserMessage.numberOfLines = 0
         firstUserMessage.isHidden = true
+        
         
         infoOne.frame = CGRect(x: 19, y: 180, width: 170, height: 150)
         infoOne.isHidden = true

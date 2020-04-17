@@ -7,10 +7,13 @@ import AVFoundation
 public class DiaryViewController : UIViewController {
     let saveButton = UIButton()
     let discardButton = UIButton()
+    let rewriteButton = UIButton()
     let writeHere = UITextView()
     
     var player: AVPlayer!
     var playerLayer: AVPlayerLayer!
+    
+    var labelFinished = UILabel()
     
     public override func loadView() {
         let diaryPage = UIView()
@@ -45,6 +48,14 @@ public class DiaryViewController : UIViewController {
         title.text = "ESCREVE AQUI TUDO \n QUE TE AFLIGE!!!"
         title.textAlignment = .center
         
+        labelFinished.frame = CGRect(x: 43, y: 672, width: 341, height: 70)
+        labelFinished.lineBreakMode = .byWordWrapping
+        labelFinished.numberOfLines = 0
+        labelFinished.font = diaryFont
+        labelFinished.textColor = #colorLiteral(red: 0.05882352941, green: 0.1176470588, blue: 0.2117647059, alpha: 1)
+        labelFinished.textAlignment = .center
+        labelFinished.isHidden = true
+        
         //text field
         writeHere.frame = CGRect(x: 30, y: 207, width: 351, height: 471)
         writeHere.textAlignment = .justified
@@ -54,6 +65,7 @@ public class DiaryViewController : UIViewController {
         writeHere.backgroundColor = #colorLiteral(red: 0.8901960784, green: 0.8549019608, blue: 0.8039215686, alpha: 1)
         writeHere.layer.cornerRadius = 10
         writeHere.isEditable = true
+        writeHere.autocorrectionType = .no
         
         //buttons
         let image5 = UIImage(named: "Salvar Button")!
@@ -65,6 +77,17 @@ public class DiaryViewController : UIViewController {
         discardButton.frame = CGRect(x: 30, y: 800, width: 355, height: 56)
         discardButton.setImage(image6, for: .normal)
         discardButton.addTarget(nil, action: #selector(touchedDiscard), for: .touchUpInside)
+        
+        let image7 = UIImage(named: "Rewrite Button")!
+        rewriteButton.frame = CGRect(x: 30, y: 760, width: 355, height: 56)
+        rewriteButton.setImage(image7, for: .normal)
+        rewriteButton.addTarget(nil, action: #selector(touchedRewrite), for: .touchUpInside)
+        rewriteButton.setTitle("Desabafar Mais!", for: .normal)
+        rewriteButton.titleLabel!.lineBreakMode = .byWordWrapping
+        rewriteButton.titleLabel!.numberOfLines = 0
+        rewriteButton.titleLabel!.textAlignment = .center
+        rewriteButton.setTitleColor(#colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1), for: .normal)
+        rewriteButton.isHidden = true
         
         //putting the navigation bar on the phone
         let phoneNavigationBar = NavigationBar(X: 16, Y: 23, Width: 206, Height: 22)
@@ -78,8 +101,10 @@ public class DiaryViewController : UIViewController {
         diaryPage.addSubview(phoneNavigationBar.backButton)
         diaryPage.addSubview(saveButton)
         diaryPage.addSubview(discardButton)
+        diaryPage.addSubview(rewriteButton)
         diaryPage.addSubview(writeHere)
         diaryPage.addSubview(title)
+        diaryPage.addSubview(labelFinished)
         
         self.view = diaryPage
     }
@@ -91,7 +116,9 @@ public class DiaryViewController : UIViewController {
     }
     
     @IBAction func touchedSave(){
-        
+        discardButton.isHidden = true
+        saveButton.isHidden = true
+        rewriteButton.isHidden = false
         let date = Date()
         let dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: date)
         let day = dateComponents.day!
@@ -117,19 +144,36 @@ public class DiaryViewController : UIViewController {
                 do {
                     try textToWrite.write(to: fileUrl, atomically: true, encoding: .utf8)
                     print("writing was successful")
-                    
                 } catch {
                     print("Error writing file: \(error)")
                 }
             }
         }
-    }
-    
-    @IBAction func touchedDiscard(){
+        labelFinished.text = "Salvo!"
+        labelFinished.isHidden = false
         writeHere.text = ""
     }
     
+    @IBAction func touchedDiscard(){
+        discardButton.isHidden = true
+        saveButton.isHidden = true
+        rewriteButton.isHidden = false
+        labelFinished.text = "Descartado!"
+        labelFinished.isHidden = false
+        writeHere.text = ""
+    }
+    
+    @IBAction func touchedRewrite(){
+        rewriteButton.isHidden = true
+        labelFinished.isHidden = true
+        saveButton.isHidden = false
+        discardButton.isHidden = false
+    }
+    
     @IBAction func touchedBack(){
+        discardButton.isHidden = false
+        saveButton.isHidden = false
+        labelFinished.isHidden = true
         player.currentItem?.seek(to: CMTime.zero, completionHandler: nil)
         player.pause()
         navigationController?.popViewController(animated: true)

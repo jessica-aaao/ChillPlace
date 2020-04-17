@@ -64,6 +64,7 @@ public class TvViewController : UIViewController, WKUIDelegate {
         fullScreenButton.setImage(image5, for: .normal)
         fullScreenButton.addTarget(nil, action: #selector(touchedfullScreen), for: .touchUpInside)
         fullScreenButton.backgroundColor = .black
+        fullScreenButton.isHidden = true
         
         //labels
         let title = UILabel()
@@ -265,11 +266,14 @@ public class TvViewController : UIViewController, WKUIDelegate {
                 videoURL = URL(string: video4)!
             }
             
+            fullScreenButton.isHidden = false
             let videoRequest = URLRequest(url: videoURL)
             webView.load(videoRequest)
             webView.uiDelegate = self
             webView.isHidden = false
         } else{
+            fullScreenButton.isHidden = true
+            webView.reload()
             webView.isHidden = true
         }
         
