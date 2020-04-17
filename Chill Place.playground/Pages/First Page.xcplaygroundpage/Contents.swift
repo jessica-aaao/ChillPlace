@@ -395,6 +395,6 @@ let exitView = ExitViewController()
 let navigation = UINavigationController(screenType: .mac, isPortrait: true)
 navigation.navigationBar.isHidden = true
 navigation.pushViewController(mainView, animated: true)
-PlaygroundPage.current.liveView = navigation.scale(to: 0.4)
+PlaygroundPage.current.liveView = navigation.scaleToFit(withKeyboard: true)
 
 
